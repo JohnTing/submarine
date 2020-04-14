@@ -26,7 +26,7 @@ import org.apache.submarine.server.api.spec.JobSpec;
 /**
  * The submitter should implement this interface.
  */
-public interface JobSubmitter {
+public interface JobSubmitter extends JobLogHandler {
   /**
    * Initialize the submitter related code
    */

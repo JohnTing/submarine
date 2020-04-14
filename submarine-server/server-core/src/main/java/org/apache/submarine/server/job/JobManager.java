@@ -170,7 +170,7 @@ public class JobManager {
     return job;
   }
 
-  private JobSubmitter getSubmitter(String type) throws SubmarineRuntimeException {
+  public JobSubmitter getSubmitter(String type) throws SubmarineRuntimeException {
     JobSubmitter submitter = submitterManager.getSubmitterByType(type);
     if (submitter == null) {
       throw new SubmarineRuntimeException(Status.INTERNAL_SERVER_ERROR.getStatusCode(),

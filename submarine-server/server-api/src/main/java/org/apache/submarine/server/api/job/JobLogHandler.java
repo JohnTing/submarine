@@ -17,23 +17,14 @@
  * under the License.
  */
 
-package org.apache.submarine.server.rest;
+package org.apache.submarine.server.api.job;
 
-public class RestConstants {
-  public static final String V1 = "v1";
-  public static final String JOBS = "jobs";
-  public static final String JOB_ID = "id";
-  public static final String PING = "ping";
-  public static final String MEDIA_TYPE_YAML = "application/yaml";
-  public static final String CHARSET_UTF8 = "charset=utf-8";
+import java.io.InputStream;
 
-  public static final String METASTORE = "metastore";
-
-  public static final String CLUSTER = "cluster";
-  public static final String ADDRESS = "address";
-
-  public static final String NODES = "nodes";
-  public static final String NODE = "node";
-
-  public static final String LOGS = "logs";
+/**
+ * Interface for getting logs of job.
+ */
+public interface JobLogHandler {
+  String getLog(Job job);
+  InputStream getLogStream(Job job);
 }
