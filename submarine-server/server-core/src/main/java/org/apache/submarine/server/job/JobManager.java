@@ -35,6 +35,7 @@ import org.apache.submarine.server.SubmitterManager;
 import org.apache.submarine.server.api.job.JobSubmitter;
 import org.apache.submarine.server.api.job.Job;
 import org.apache.submarine.server.api.job.JobId;
+import org.apache.submarine.server.api.job.JobLog;
 import org.apache.submarine.server.api.spec.JobSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -168,6 +169,23 @@ public class JobManager {
     Job patchJob = getSubmitter(spec.getSubmitterSpec().getType()).deleteJob(spec);
     job.rebuild(patchJob);
     return job;
+  }
+
+  /**
+   * Get job log
+   * @param id job id
+   * @return object
+   * @throws SubmarineRuntimeException the service error
+   */
+  public List<JobLog> getJobLog(String id) throws SubmarineRuntimeException {
+    checkJobId(id);
+    Job job = cachedJobMap.get(id);
+    JobSpec spec = job.getSpec();
+    JobSubmitter jobSubmitter = getSubmitter(spec.getSubmitterSpec().getType());
+    Job patchJob = jobSubmitter.findJob(spec);
+    job.rebuild(patchJob);
+    
+    return jobSubmitter.getJobLog(spec);
   }
 
   public JobSubmitter getSubmitter(String type) throws SubmarineRuntimeException {

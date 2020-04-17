@@ -19,6 +19,8 @@
 
 package org.apache.submarine.server.api.job;
 
+import java.util.List;
+
 import org.apache.submarine.commons.utils.SubmarineConfiguration;
 import org.apache.submarine.commons.utils.exception.SubmarineRuntimeException;
 import org.apache.submarine.server.api.spec.JobSpec;
@@ -26,7 +28,7 @@ import org.apache.submarine.server.api.spec.JobSpec;
 /**
  * The submitter should implement this interface.
  */
-public interface JobSubmitter extends JobLogHandler {
+public interface JobSubmitter {
   /**
    * Initialize the submitter related code
    */
@@ -70,4 +72,6 @@ public interface JobSubmitter extends JobLogHandler {
    * @throws SubmarineRuntimeException running error
    */
   Job deleteJob(JobSpec jobSpec) throws SubmarineRuntimeException;
+
+  List<JobLog> getJobLog(JobSpec jobSpec) throws SubmarineRuntimeException;
 }

@@ -21,7 +21,12 @@ package org.apache.submarine.server.submitter.k8s;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
+// import java.io.InputStream;
+import java.util.ArrayList;
+// import java.util.Dictionary;
+//import java.util.HashMap;
+//import java.util.Hashtable;
+import java.util.List;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.Gson;
@@ -30,7 +35,7 @@ import io.kubernetes.client.ApiClient;
 import io.kubernetes.client.ApiException;
 import io.kubernetes.client.Configuration;
 import io.kubernetes.client.JSON;
-import io.kubernetes.client.PodLogs;
+//import io.kubernetes.client.PodLogs;
 import io.kubernetes.client.apis.CoreV1Api;
 import io.kubernetes.client.apis.CustomObjectsApi;
 import io.kubernetes.client.models.V1Pod;
@@ -44,8 +49,10 @@ import org.apache.submarine.commons.utils.exception.SubmarineRuntimeException;
 import org.apache.submarine.server.api.exception.InvalidSpecException;
 import org.apache.submarine.server.api.job.JobSubmitter;
 import org.apache.submarine.server.api.job.Job;
+import org.apache.submarine.server.api.job.JobLog;
 import org.apache.submarine.server.api.spec.JobLibrarySpec;
 import org.apache.submarine.server.api.spec.JobSpec;
+// import org.apache.submarine.server.api.spec.JobTaskSpec;
 import org.apache.submarine.server.submitter.k8s.util.MLJobConverter;
 import org.apache.submarine.server.submitter.k8s.model.MLJob;
 import org.apache.submarine.server.submitter.k8s.parser.JobSpecParser;
@@ -66,7 +73,7 @@ public class K8sJobSubmitter implements JobSubmitter {
   // K8s API client for CRD
   private CustomObjectsApi api;
 
-  ApiClient client;
+  private CoreV1Api COREV1_API;
 
   public K8sJobSubmitter() {}
 
@@ -90,7 +97,8 @@ public class K8sJobSubmitter implements JobSubmitter {
   private void loadClientConfiguration(String path) {
     try {
       KubeConfig config = KubeConfig.loadKubeConfig(new FileReader(path));
-      client = ClientBuilder.kubeconfig(config).build();
+      ApiClient client = ClientBuilder.kubeconfig(config).build();
+      COREV1_API = new CoreV1Api(client);
       Configuration.setDefaultApiClient(client);
     } catch (Exception e) {
       LOG.warn("Failed to load the configured K8s kubeconfig file: " +
@@ -99,7 +107,7 @@ public class K8sJobSubmitter implements JobSubmitter {
       LOG.info("Assume running in the k8s cluster, " +
           "try to load in-cluster config");
       try {
-        client = ClientBuilder.cluster().build();
+        ApiClient client = ClientBuilder.cluster().build();
         Configuration.setDefaultApiClient(client);
       } catch (IOException e1) {
         LOG.error("Initialize K8s submitter failed. " + e.getMessage(), e1);
@@ -197,49 +205,42 @@ public class K8sJobSubmitter implements JobSubmitter {
     throw new SubmarineRuntimeException(500, "K8s Submitter parse upstream response failed.");
   }
 
-  public String getLog(final Job job) {
-    if (job == null) {
-      return null;
-    }
-    final CoreV1Api COREV1_API = new CoreV1Api(client);
-
+  @Override
+  public List<JobLog> getJobLog(JobSpec jobSpec) {
+    List<JobLog> jobLoglist = new ArrayList<JobLog>();
     try {
       final V1PodList podList = COREV1_API.listNamespacedPod(
-          job.getSpec().getSubmitterSpec().getNamespace(),
+          jobSpec.getSubmitterSpec().getNamespace(),
           "false", null, null,
-          getJobLabelSelector(job), null, null,
+          getJobLabelSelector(jobSpec), null, null,
           null, null);
-
-      final V1Pod pod = podList.getItems().get(0);
-      final String podName = pod.getMetadata().getName();
-      final String namespace = job.getSpec().getSubmitterSpec().getNamespace();
-      
-      String readNamespacedPodLog =
-          COREV1_API.readNamespacedPodLog(
-            podName,
-            namespace,
-            null,
-            Boolean.FALSE,
-            Integer.MAX_VALUE,
-            null,
-            Boolean.FALSE,
-            Integer.MAX_VALUE,
-            40,
-            Boolean.FALSE);
-
-      return readNamespacedPodLog;
-
+      JobLog jobLog = new JobLog();
+      for (V1Pod pod : podList.getItems()) {
+        String podName = pod.getMetadata().getName();
+        String namespace = pod.getMetadata().getNamespace();
+        String podLog = COREV1_API.readNamespacedPodLog(
+            podName, namespace, null, Boolean.FALSE,
+            Integer.MAX_VALUE, null, Boolean.FALSE, 
+            Integer.MAX_VALUE, null, Boolean.FALSE);
+  
+        jobLog.setPodName(podName);
+        jobLog.setPodLog(podLog);
+        jobLoglist.add(jobLog);
+      }
     } catch (final ApiException e) {
-      LOG.warn("Error when listing pod for job:" + job.toString(), e.getMessage());
+      LOG.error("Error when listing pod for job:" + jobSpec.getName(), e.getMessage());
     }
-    return null;
+  
+    return jobLoglist;
   }
-
-  public InputStream getLogStream(final Job job) {
+  
+  /*
+  public HashMap<String, InputStream> getLogStream(final Job job) {
     if (job == null) {
       return null;
     }
     final CoreV1Api COREV1_API = new CoreV1Api(client);
+    HashMap<String, InputStream> LogStreamMap = new HashMap<String, InputStream>();
 
     try {
       final V1PodList podList = COREV1_API.listNamespacedPod(
@@ -247,11 +248,15 @@ public class K8sJobSubmitter implements JobSubmitter {
           "false", null, null,
           getJobLabelSelector(job), null, null,
           null, null);
-      final V1Pod pod = podList.getItems().get(0);
-      PodLogs logs = new PodLogs();
-      
-      InputStream inputStream = logs.streamNamespacedPodLog(pod);
-      return inputStream;
+
+      for (V1Pod pod : podList.getItems()) {
+        String podName = pod.getMetadata().getName();
+        PodLogs logs = new PodLogs();
+        InputStream inputStream = logs.streamNamespacedPodLog(pod);
+        LogStreamMap.put(podName, inputStream);
+      }
+
+      return LogStreamMap;
 
     } catch (final ApiException e) {
       LOG.warn("Error when listing pod for job:" + job.toString(), e.getMessage());
@@ -260,14 +265,14 @@ public class K8sJobSubmitter implements JobSubmitter {
     }
     return null;
   }
+  */
 
-
-  private String getJobLabelSelector(final Job job) {
-    if (job.getSpec().getLibrarySpec()
+  private String getJobLabelSelector(JobSpec jobSpec) {
+    if (jobSpec.getLibrarySpec()
         .getName().equalsIgnoreCase(JobLibrarySpec.SupportedMLFramework.TENSORFLOW.getName())) {
-      return TF_JOB_SELECTOR_KEY + job.getSpec().getName();
+      return TF_JOB_SELECTOR_KEY + jobSpec.getName();
     } else {
-      return PYTORCH_JOB_SELECTOR_KEY + job.getSpec().getName();
+      return PYTORCH_JOB_SELECTOR_KEY + jobSpec.getName();
     }
   }
 
