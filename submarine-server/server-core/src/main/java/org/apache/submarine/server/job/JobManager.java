@@ -22,6 +22,7 @@ package org.apache.submarine.server.job;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -170,6 +171,23 @@ public class JobManager {
     job.rebuild(patchJob);
     return job;
   }
+
+  /**
+   * List jobs
+   * @param status job log status, if null will return all job logs
+   * @return job log list
+   * @throws SubmarineRuntimeException the service error
+   */
+  public Map<String, List<JobLog>> listJobLogsByStatus(String status) throws SubmarineRuntimeException {
+    List<Job> jobList = listJobsByStatus(status);
+    Map<String, List<JobLog>> jobLogMap = new HashMap<String, List<JobLog>>();
+    for(Job job : jobList ) {
+
+    }
+    return jobLogMap;
+  }
+
+
 
   /**
    * Get job log
