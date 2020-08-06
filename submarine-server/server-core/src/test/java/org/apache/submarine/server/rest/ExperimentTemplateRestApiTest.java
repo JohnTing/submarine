@@ -139,6 +139,12 @@ public class ExperimentTemplateRestApiTest {
     assertEquals("foo", experimentTemplate.getExperimentTemplateSpec().getName());
   }
 
+  @Test
+  public void loadContent() throws IOException {
+    InputStream is = getClass().getClassLoader().getResourceAsStream("environment/test_env_1.json");
+        is.readAllBytes();
+  }
+  
   protected String loadContent(String resourceName) {
     StringBuilder content = new StringBuilder();
     InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(resourceName);
