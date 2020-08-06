@@ -142,7 +142,8 @@ public class ExperimentTemplateRestApiTest {
 
   @Test
   public void loadContent() throws IOException {
-    File inputXmlFile = new File(this.getClass().getResource("/experimenttemplate/test_template_1.json").getFile());
+    File inputXmlFile = new File(this.getClass().
+          getResource("/experimenttemplate/test_template_1.json").getFile());
     System.out.println(inputXmlFile.getAbsolutePath());
   }
   
