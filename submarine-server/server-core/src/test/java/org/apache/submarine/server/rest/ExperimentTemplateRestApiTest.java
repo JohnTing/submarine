@@ -38,6 +38,7 @@ import org.junit.Test;
 import javax.ws.rs.core.Response;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -141,8 +142,8 @@ public class ExperimentTemplateRestApiTest {
 
   @Test
   public void loadContent() throws IOException {
-    InputStream is = getClass().getClassLoader().getResourceAsStream("environment/test_env_1.json");
-        is.readAllBytes();
+    File inputXmlFile = new File(this.getClass().getResource("/experimenttemplate/test_template_1.json").getFile());
+    System.out.println(inputXmlFile.getAbsolutePath());
   }
   
   protected String loadContent(String resourceName) {
