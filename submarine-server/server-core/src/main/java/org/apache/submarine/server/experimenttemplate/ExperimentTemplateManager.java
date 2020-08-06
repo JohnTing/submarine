@@ -138,10 +138,11 @@ public class ExperimentTemplateManager {
       cachedExperimentTemplates.putIfAbsent(spec.getName(), experimentTemplate);
 
       return experimentTemplate;
+      
     } catch (Exception e) {
       LOG.error(e.getMessage(), e);
       throw new SubmarineRuntimeException(Status.BAD_REQUEST.getStatusCode(),
-          "Unable to process the experimentTemplate spec.");
+          "Unable to process the experimentTemplate spec.\n" + e.getMessage());
     }
   }
 
