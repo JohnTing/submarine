@@ -24,10 +24,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.apache.submarine.commons.utils.SubmarineConfiguration;
 import org.apache.submarine.server.api.experimenttemplate.ExperimentTemplate;
-import org.apache.submarine.server.api.spec.ExperimentSpec;
-import org.apache.submarine.server.api.spec.ExperimentTemplateParamSpec;
+//import org.apache.submarine.server.api.spec.ExperimentSpec;
+//import org.apache.submarine.server.api.spec.ExperimentTemplateParamSpec;
 import org.apache.submarine.server.api.spec.ExperimentTemplateSpec;
-import org.apache.submarine.server.api.spec.KernelSpec;
+//import org.apache.submarine.server.api.spec.KernelSpec;
 import org.apache.submarine.server.response.JsonResponse;
 import org.junit.After;
 import org.junit.Assert;
@@ -42,11 +42,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.List;
+//import java.util.Arrays;
+//import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+//import static org.junit.Assert.fail;
 
 public class ExperimentTemplateRestApiTest {
   private static ExperimentTemplateRestApi experimentTemplateStoreApi;
@@ -89,8 +89,8 @@ public class ExperimentTemplateRestApiTest {
 
     // Update ExperimentTemplate
     experimentTemplateSpec.setDescription("newdescription");
-    Response updateTplResponse = experimentTemplateStoreApi.updateExperimentTemplate(experimentTemplateSpec.getName(),
-        experimentTemplateSpec);
+    Response updateTplResponse = experimentTemplateStoreApi.
+        updateExperimentTemplate(experimentTemplateSpec.getName(), experimentTemplateSpec);
     assertEquals(Response.Status.OK.getStatusCode(), updateTplResponse.getStatus());
   }
 
@@ -100,7 +100,8 @@ public class ExperimentTemplateRestApiTest {
     String body = loadContent("experimenttemplate/test_template_1.json");
     experimentTemplateSpec = gson.fromJson(body, ExperimentTemplateSpec.class);
 
-    Response deleteEnvResponse = experimentTemplateStoreApi.deleteExperimentTemplate(experimentTemplateSpec.getName());
+    Response deleteEnvResponse = experimentTemplateStoreApi.
+          deleteExperimentTemplate(experimentTemplateSpec.getName());
     assertEquals(Response.Status.OK.getStatusCode(), deleteEnvResponse.getStatus());
   }
 
@@ -110,7 +111,8 @@ public class ExperimentTemplateRestApiTest {
     String body = loadContent("experimenttemplate/test_template_1.json");
     experimentTemplateSpec = gson.fromJson(body, ExperimentTemplateSpec.class);
 
-    Response getEnvResponse = experimentTemplateStoreApi.getExperimentTemplate(experimentTemplateSpec.getName());
+    Response getEnvResponse = experimentTemplateStoreApi.
+          getExperimentTemplate(experimentTemplateSpec.getName());
     ExperimentTemplate experimentTemplate = getExperimentTemplateFromResponse(getEnvResponse);
     assertEquals("foo", experimentTemplate.getExperimentTemplateSpec().getName());
 
@@ -119,7 +121,7 @@ public class ExperimentTemplateRestApiTest {
   private ExperimentTemplate getExperimentTemplateFromResponse(Response response) {
     String entity = (String) response.getEntity();
     Type type = new TypeToken<JsonResponse<ExperimentTemplate>>() {
-    }.getType();
+        }.getType();
     JsonResponse<ExperimentTemplate> jsonResponse = gson.fromJson(entity, type);
     return jsonResponse.getResult();
   }
