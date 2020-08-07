@@ -48,6 +48,7 @@ import java.lang.reflect.Type;
 
 import static org.junit.Assert.assertEquals;
 //import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 public class ExperimentTemplateRestApiTest {
   private static ExperimentTemplateRestApi experimentTemplateStoreApi;
@@ -142,9 +143,9 @@ public class ExperimentTemplateRestApiTest {
 
   @Test
   public void loadContent() throws IOException {
-    File inputXmlFile = new File(this.getClass().
-          getResource("/experimenttemplate/test_template_1.json").getFile());
-    System.out.println(inputXmlFile.getAbsolutePath());
+    ClassLoader classLoader = this.getClass().getClassLoader();
+    File file = new File(classLoader.getResource("experimenttemplate/test_template_1.json").getFile());
+    assertTrue(file.exists());
   }
   
   protected String loadContent(String resourceName) {
