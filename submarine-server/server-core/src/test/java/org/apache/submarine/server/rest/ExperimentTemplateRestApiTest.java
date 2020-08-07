@@ -113,7 +113,7 @@ public class ExperimentTemplateRestApiTest {
     Response getEnvResponse = experimentTemplateStoreApi.
           getExperimentTemplate(experimentTemplateSpec.getName());
     ExperimentTemplate experimentTemplate = getExperimentTemplateFromResponse(getEnvResponse);
-    assertEquals("foo", experimentTemplate.getExperimentTemplateSpec().getName());
+    assertEquals(experimentTemplateSpec.getName(), experimentTemplate.getExperimentTemplateSpec().getName());
 
   }
 
@@ -127,6 +127,10 @@ public class ExperimentTemplateRestApiTest {
 
   @Test
   public void listExperimentTemplate() {
+
+    String body = loadContent("experimenttemplate/test_template_1.json");
+    experimentTemplateSpec = gson.fromJson(body, ExperimentTemplateSpec.class);
+
     Response getEnvResponse = experimentTemplateStoreApi.listExperimentTemplate("");
     String entity = (String) getEnvResponse.getEntity();
     JsonResponse jsonResponse = gson.fromJson(entity, JsonResponse.class);
@@ -135,7 +139,7 @@ public class ExperimentTemplateRestApiTest {
     assertEquals(1, experimentTemplates.length);
 
     ExperimentTemplate experimentTemplate = experimentTemplates[0];
-    assertEquals("foo", experimentTemplate.getExperimentTemplateSpec().getName());
+    assertEquals(experimentTemplateSpec.getName(), experimentTemplate.getExperimentTemplateSpec().getName());
   }
   /*
   @Test
