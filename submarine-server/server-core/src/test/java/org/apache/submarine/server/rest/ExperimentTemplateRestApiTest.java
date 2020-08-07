@@ -51,16 +51,6 @@ public class ExperimentTemplateRestApiTest {
   private static ExperimentTemplateRestApi experimentTemplateStoreApi;
   private static ExperimentTemplateSpec experimentTemplateSpec;
 
-  /*
-   * private static String experimentTemplateName = "testName"; private static
-   * String experimentTemplateAuthor = "testAuthor"; private static String
-   * experimentTemplateDescription = "testDescription"; private static String
-   * experimentTemplateParamName = "testParamName"; private static String
-   * experimentTemplateParamValue = "testParamValue"; private static String
-   * experimentTemplateParamRequired = "testParamRequired"; private static String
-   * experimentTemplateParamDescription = "testParamDescription";
-   */
-
   private static GsonBuilder gsonBuilder = new GsonBuilder();
   private static Gson gson = gsonBuilder.setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
@@ -72,16 +62,14 @@ public class ExperimentTemplateRestApiTest {
         + "zeroDateTimeBehavior=convertToNull&amp;" + "useSSL=false");
     submarineConf.setMetastoreJdbcUserName("submarine_test");
     submarineConf.setMetastoreJdbcPassword("password_test");
-    experimentTemplateStoreApi = new ExperimentTemplateRestApi();
-
+    experimentTemplateStoreApi = new ExperimentTemplateRestApi();  
   }
 
   @Before
   public void createAndUpdateExperimentTemplate() {
-
     String body = loadContent("experimenttemplate/test_template_1.json");
     experimentTemplateSpec = gson.fromJson(body, ExperimentTemplateSpec.class);
-
+    
     // Create ExperimentTemplate
     Response createEnvResponse = experimentTemplateStoreApi.createExperimentTemplate(experimentTemplateSpec);
     assertEquals(Response.Status.OK.getStatusCode(), createEnvResponse.getStatus());
@@ -141,16 +129,8 @@ public class ExperimentTemplateRestApiTest {
     ExperimentTemplate experimentTemplate = experimentTemplates[0];
     assertEquals(experimentTemplateSpec.getName(), experimentTemplate.getExperimentTemplateSpec().getName());
   }
-  /*
-  @Test
-  public void loadContent() throws IOException {
-    ClassLoader classLoader = this.getClass().getClassLoader();
-    File file = new File(classLoader.getResource("experimenttemplate/test_template_1.json").getFile());
-    assertTrue(file.exists());
-  }
-  */
 
-  protected String loadContent(String resourceName)  {
+  protected String loadContent(String resourceName) {
     StringBuilder content = new StringBuilder();
     InputStream inputStream =
         this.getClass().getClassLoader().getResourceAsStream(resourceName);
@@ -163,7 +143,6 @@ public class ExperimentTemplateRestApiTest {
       inputStream.close();
     } catch (IOException e) {
       Assert.fail(e.toString());
-      // e.printStackTrace();
     }
     return content.toString();
   }
