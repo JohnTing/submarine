@@ -45,7 +45,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
   @Test
   public void testCreateExperimentTemplate() throws Exception {
-    String body = loadContent("experimectTemplate/test_template_1.json");
+    String body = loadContent("experimecttemplate/test_template_1.json");
     run(body, "application/json");
     deleteExperimentTemplate();
   }
@@ -53,7 +53,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
   @Test
   public void testGetExperimentTemplate() throws Exception {
 
-    String body = loadContent("experimectTemplate/test_template_1.json");
+    String body = loadContent("experimecttemplate/test_template_1.json");
     run(body, "application/json");
 
     Gson gson = new GsonBuilder().create();
@@ -80,7 +80,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
   @Test
   public void testDeleteExperimentTemplate() throws Exception {
-    String body = loadContent("experimectTemplate/test_template_1.json");
+    String body = loadContent("experimecttemplate/test_template_1.json");
     run(body, "application/json");
     deleteExperimentTemplate();
     
