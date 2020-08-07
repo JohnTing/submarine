@@ -156,7 +156,6 @@ public class ExperimentTemplateRestApiTest {
     try {
       while ((l = r.readLine()) != null) {
         content.append(l).append("\n");
-        inputStream.close();
       }
     } catch (IOException e) {
       Assert.fail(e.getMessage());
