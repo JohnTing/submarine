@@ -38,7 +38,6 @@ import org.junit.Test;
 import javax.ws.rs.core.Response;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -47,8 +46,6 @@ import java.lang.reflect.Type;
 //import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-//import static org.junit.Assert.fail;
-import static org.junit.Assert.assertTrue;
 
 public class ExperimentTemplateRestApiTest {
   private static ExperimentTemplateRestApi experimentTemplateStoreApi;
@@ -140,25 +137,28 @@ public class ExperimentTemplateRestApiTest {
     ExperimentTemplate experimentTemplate = experimentTemplates[0];
     assertEquals("foo", experimentTemplate.getExperimentTemplateSpec().getName());
   }
-
+  /*
   @Test
   public void loadContent() throws IOException {
     ClassLoader classLoader = this.getClass().getClassLoader();
     File file = new File(classLoader.getResource("experimenttemplate/test_template_1.json").getFile());
     assertTrue(file.exists());
   }
-  
-  protected String loadContent(String resourceName) {
+  */
+
+  protected String loadContent(String resourceName)  {
     StringBuilder content = new StringBuilder();
-    InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(resourceName);
+    InputStream inputStream =
+        this.getClass().getClassLoader().getResourceAsStream(resourceName);
     BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));
     String l;
     try {
       while ((l = r.readLine()) != null) {
         content.append(l).append("\n");
       }
+      inputStream.close();
     } catch (IOException e) {
-      Assert.fail(e.getMessage());
+      Assert.fail(e.toString());
       // e.printStackTrace();
     }
     return content.toString();
