@@ -20,7 +20,6 @@
 package org.apache.submarine.rest;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.ws.rs.core.Response;
 
