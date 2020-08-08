@@ -25,9 +25,11 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.submarine.server.AbstractSubmarineServerTest;
 import org.apache.submarine.server.api.experimenttemplate.ExperimentTemplate;
 import org.apache.submarine.server.response.JsonResponse;
+import org.apache.submarine.server.rest.RestConstants;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -37,6 +39,11 @@ import com.google.gson.GsonBuilder;
 
 @SuppressWarnings("rawtypes")
 public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerTest {
+
+  protected static String TPL_PATH =
+      "/api/" + RestConstants.V1 + "/" + RestConstants.EXPERIMENT_TEMPLATES;
+  protected static String TPL_NAME = "tf-mnist";
+
 
   @BeforeClass
   public static void startUp() throws Exception {
@@ -57,7 +64,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
     run(body, "application/json");
 
     Gson gson = new GsonBuilder().create();
-    GetMethod getMethod = httpGet(ENV_PATH + "/" + ENV_NAME);
+    GetMethod getMethod = httpGet(TPL_PATH + "/" + TPL_NAME);
     Assert.assertEquals(Response.Status.OK.getStatusCode(),
         getMethod.getStatusCode());
 
@@ -68,7 +75,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
     ExperimentTemplate getExperimentTemplate =
         gson.fromJson(gson.toJson(jsonResponse.getResult()), ExperimentTemplate.class);
-    Assert.assertEquals(ENV_NAME, getExperimentTemplate.getExperimentTemplateSpec().getName());
+    Assert.assertEquals(TPL_NAME, getExperimentTemplate.getExperimentTemplateSpec().getName());
     deleteExperimentTemplate();
   }
   
@@ -84,7 +91,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
     run(body, "application/json");
     deleteExperimentTemplate();
     
-    GetMethod getMethod = httpGet(ENV_PATH + "/" + ENV_NAME);
+    GetMethod getMethod = httpGet(TPL_PATH + "/" + TPL_NAME);
     Assert.assertEquals(Response.Status.NOT_FOUND.getStatusCode(),
         getMethod.getStatusCode());
     
@@ -97,7 +104,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
   protected void deleteExperimentTemplate() throws IOException {
     Gson gson = new GsonBuilder().create();
-    DeleteMethod deleteMethod = httpDelete(ENV_PATH + "/" + ENV_NAME);
+    DeleteMethod deleteMethod = httpDelete(TPL_PATH + "/" + TPL_NAME);
     Assert.assertEquals(Response.Status.OK.getStatusCode(),
         deleteMethod.getStatusCode());
 
@@ -108,6 +115,32 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
     ExperimentTemplate deletedTpl =
         gson.fromJson(gson.toJson(jsonResponse.getResult()), ExperimentTemplate.class);
-    Assert.assertEquals(ENV_NAME, deletedTpl.getExperimentTemplateSpec().getName());
+    Assert.assertEquals(TPL_NAME, deletedTpl.getExperimentTemplateSpec().getName());
+  }
+
+  protected void run(String body, String contentType) throws Exception {
+    Gson gson = new GsonBuilder().create();
+
+    // create
+    LOG.info("Create Environment using Environment REST API");
+
+    PostMethod postMethod = httpPost(TPL_PATH, body, contentType);
+    Assert.assertEquals(Response.Status.OK.getStatusCode(),
+        postMethod.getStatusCode());
+
+    String json = postMethod.getResponseBodyAsString();
+    JsonResponse jsonResponse = gson.fromJson(json, JsonResponse.class);
+    Assert.assertEquals(Response.Status.OK.getStatusCode(),
+        jsonResponse.getCode());
+
+        ExperimentTemplate tpl =
+        gson.fromJson(gson.toJson(jsonResponse.getResult()), ExperimentTemplate.class);
+    verifyCreateExperimentTemplateApiResult(tpl);
+  }
+
+  protected void verifyCreateExperimentTemplateApiResult(ExperimentTemplate tpl)
+      throws Exception {
+    Assert.assertNotNull(tpl.getExperimentTemplateSpec().getName());
+    Assert.assertNotNull(tpl.getExperimentTemplateSpec());
   }
 }
