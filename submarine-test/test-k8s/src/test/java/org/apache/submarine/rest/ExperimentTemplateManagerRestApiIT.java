@@ -123,9 +123,9 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
     // create
     LOG.info("Create ExperimentTemplate using ExperimentTemplate REST API");
-
+    LOG.info(body);
     PostMethod postMethod = httpPost(TPL_PATH, body, contentType);
-
+    
     LOG.info(postMethod.getResponseBodyAsString());
 
     Assert.assertEquals(Response.Status.OK.getStatusCode(),
