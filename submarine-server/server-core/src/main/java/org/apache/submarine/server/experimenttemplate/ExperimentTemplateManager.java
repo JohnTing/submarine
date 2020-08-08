@@ -138,6 +138,7 @@ public class ExperimentTemplateManager {
       cachedExperimentTemplates.putIfAbsent(spec.getName(), experimentTemplate);
 
       return experimentTemplate;
+      
     } catch (Exception e) {
       LOG.error(e.getMessage(), e);
       throw new SubmarineRuntimeException(Status.BAD_REQUEST.getStatusCode(),
