@@ -122,7 +122,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
     Gson gson = new GsonBuilder().create();
 
     // create
-    LOG.info("Create Environment using Environment REST API");
+    LOG.info("Create ExperimentTemplate using ExperimentTemplate REST API");
 
     PostMethod postMethod = httpPost(TPL_PATH, body, contentType);
     Assert.assertEquals(Response.Status.OK.getStatusCode(),
