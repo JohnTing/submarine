@@ -42,7 +42,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
   protected static String TPL_PATH =
       "/api/" + RestConstants.V1 + "/" + RestConstants.EXPERIMENT_TEMPLATES;
-  protected static String TPL_NAME = "tf-mnist";
+  protected static String TPL_NAME = "tf-mnist-test2";
 
 
   @BeforeClass
@@ -52,7 +52,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
   @Test
   public void testCreateExperimentTemplate() throws Exception {
-    String body = loadContent("experimenttemplate/test_template_1.json");
+    String body = loadContent("experimenttemplate/test_template_2.json");
     run(body, "application/json");
     deleteExperimentTemplate();
   }
@@ -60,7 +60,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
   @Test
   public void testGetExperimentTemplate() throws Exception {
     
-    String body = loadContent("experimenttemplate/test_template_1.json");
+    String body = loadContent("experimenttemplate/test_template_2.json");
     run(body, "application/json");
 
     Gson gson = new GsonBuilder().create();
@@ -87,7 +87,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
   @Test
   public void testDeleteExperimentTemplate() throws Exception {
-    String body = loadContent("experimenttemplate/test_template_1.json");
+    String body = loadContent("experimenttemplate/test_template_2.json");
     run(body, "application/json");
     deleteExperimentTemplate();
     
