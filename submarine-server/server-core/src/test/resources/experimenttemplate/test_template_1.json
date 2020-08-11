@@ -1,6 +1,6 @@
 {
-  "name": "tf-mnist-test",
-  "author": "JohnTing",
+  "name": "tf-mnist-test1",
+  "author": "author-test1",
   "description": "This is a template to run tf-mnist\n",
   "parameters": [
     {
