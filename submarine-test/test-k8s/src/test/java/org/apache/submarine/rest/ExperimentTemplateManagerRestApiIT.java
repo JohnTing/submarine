@@ -28,6 +28,7 @@ import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.submarine.server.AbstractSubmarineServerTest;
+import org.apache.submarine.server.api.experiment.Experiment;
 import org.apache.submarine.server.api.experimenttemplate.ExperimentTemplate;
 import org.apache.submarine.server.response.JsonResponse;
 import org.apache.submarine.server.rest.RestConstants;
@@ -188,5 +189,34 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
       throws Exception {
     Assert.assertNotNull(tpl.getExperimentTemplateSpec().getName());
     Assert.assertNotNull(tpl.getExperimentTemplateSpec());
+  }
+
+  protected void submitExperimentTemplate() throws Exception {
+    String body = loadContent(TPL_FILE);
+    String contentType = "application/json";
+    String url = TPL_PATH + "/" + RestConstants.EXPERIMENT_TEMPLATE_SUBMIT;
+    // submit
+    LOG.info("Submit ExperimentTemplate using ExperimentTemplate REST API");
+    LOG.info(body);
+
+    PostMethod postMethod = httpPost(url, body, contentType);
+    LOG.info(postMethod.getResponseBodyAsString());
+    Assert.assertEquals(Response.Status.OK.getStatusCode(), 
+        postMethod.getStatusCode());
+    
+    String json = postMethod.getResponseBodyAsString();
+    LOG.info(json);
+    JsonResponse jsonResponse = gson.fromJson(json, JsonResponse.class);
+    Assert.assertEquals(Response.Status.OK.getStatusCode(),
+        jsonResponse.getCode());
+
+
+    ExperimentTemplate tpl =  gson.fromJson(body, ExperimentTemplate.class);
+    Experiment experiment = gson.fromJson(gson.toJson(jsonResponse.getResult()), Experiment.class);
+
+    LOG.info(tpl.toString());
+    LOG.info(experiment.toString());
+
+    Assert.assertEquals(tpl.getExperimentTemplateSpec().getExperimentSpec(), experiment.getSpec());
   }
 }
