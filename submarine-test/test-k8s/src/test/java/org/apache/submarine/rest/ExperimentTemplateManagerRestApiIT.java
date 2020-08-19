@@ -84,11 +84,13 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
   @Test
   public void testUpdateExperimentTemplate() throws Exception {
+    LOG.info("testUpdateExperimentTemplate");
+
     String body = loadContent(TPL_FILE);
     run(body, "application/json");
 
     ExperimentTemplate tpl =
-    gson.fromJson(gson.toJson(body), ExperimentTemplate.class);
+    gson.fromJson(body, ExperimentTemplate.class);
     tpl.getExperimentTemplateSpec().setDescription("new description");
     String newBody = gson.toJson(tpl);
 
@@ -102,7 +104,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
     JsonResponse jsonResponse = gson.fromJson(json, JsonResponse.class);
     Assert.assertEquals(Response.Status.OK.getStatusCode(),
         jsonResponse.getCode());
-
+        
     ExperimentTemplate getExperimentTemplate =
         gson.fromJson(gson.toJson(jsonResponse.getResult()), ExperimentTemplate.class);
 
@@ -114,6 +116,8 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
   @Test
   public void testDeleteExperimentTemplate() throws Exception {
+    LOG.info("testDeleteExperimentTemplate");
+
     String body = loadContent(TPL_FILE);
     run(body, "application/json");
     deleteExperimentTemplate();
@@ -126,6 +130,8 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
   @Test
   public void testListExperimentTemplates() throws Exception {
+    LOG.info("testListExperimentTemplates");
+
     String body = loadContent(TPL_FILE);
     run(body, "application/json");
     
@@ -149,6 +155,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
   protected void deleteExperimentTemplate() throws IOException {
 
+    LOG.info("deleteExperimentTemplate");
     DeleteMethod deleteMethod = httpDelete(TPL_PATH + "/" + TPL_NAME);
     Assert.assertEquals(Response.Status.OK.getStatusCode(),
         deleteMethod.getStatusCode());
