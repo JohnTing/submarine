@@ -152,7 +152,8 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
     deleteExperimentTemplate();
   }
-
+  
+  @Test
   protected void deleteExperimentTemplate() throws IOException {
 
     LOG.info("deleteExperimentTemplate");
@@ -198,6 +199,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
     Assert.assertNotNull(tpl.getExperimentTemplateSpec());
   }
 
+  @Test
   protected void submitExperimentTemplate() throws Exception {
     String body = loadContent(TPL_FILE);
     String contentType = "application/json";
