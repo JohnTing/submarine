@@ -153,7 +153,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
   }
 
   @Test
-  protected void deleteExperimentTemplate() throws IOException {
+  public void deleteExperimentTemplate() throws IOException {
 
     LOG.info("deleteExperimentTemplate");
     DeleteMethod deleteMethod = httpDelete(TPL_PATH + "/" + TPL_NAME);
@@ -199,7 +199,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
   }
 
   @Test
-  protected void submitExperimentTemplate() throws Exception {
+  public void submitExperimentTemplate() throws Exception {
     String body = loadContent(TPL_FILE);
     String contentType = "application/json";
     String url = TPL_PATH + "/" + RestConstants.EXPERIMENT_TEMPLATE_SUBMIT;
