@@ -93,6 +93,12 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
     run(body, "application/json");
     LOG.info(body);
     
+    ExperimentTemplateSpec tplSpec = gson.fromJson(body, ExperimentTemplateSpec.class);
+    tplSpec.setDescription("new description");
+    String newBody = gson.toJson(tplSpec);
+
+    httpPatch(TPL_PATH + "/" + TPL_NAME, newBody, "application/json");
+
     GetMethod getMethod = httpGet(TPL_PATH + "/" + TPL_NAME);
     Assert.assertEquals(Response.Status.OK.getStatusCode(),
         getMethod.getStatusCode());
@@ -101,27 +107,8 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
     JsonResponse jsonResponse = gson.fromJson(json, JsonResponse.class);
     Assert.assertEquals(Response.Status.OK.getStatusCode(),
         jsonResponse.getCode());
-
-    ExperimentTemplate getExperimentTemplate =
-        gson.fromJson(gson.toJson(jsonResponse.getResult()), ExperimentTemplate.class);
-    Assert.assertEquals(TPL_NAME, getExperimentTemplate.getExperimentTemplateSpec().getName());
-
-    ExperimentTemplate tpl = getExperimentTemplate;
-    tpl.getExperimentTemplateSpec().setDescription("new description");
-    String newBody = gson.toJson(tpl);
-
-    httpPatch(TPL_PATH + "/" + TPL_NAME, newBody, "application/json");
-
-    getMethod = httpGet(TPL_PATH + "/" + TPL_NAME);
-    Assert.assertEquals(Response.Status.OK.getStatusCode(),
-        getMethod.getStatusCode());
-
-    json = getMethod.getResponseBodyAsString();
-    jsonResponse = gson.fromJson(json, JsonResponse.class);
-    Assert.assertEquals(Response.Status.OK.getStatusCode(),
-        jsonResponse.getCode());
             
-    getExperimentTemplate =
+    ExperimentTemplate getExperimentTemplate =
         gson.fromJson(gson.toJson(jsonResponse.getResult()), ExperimentTemplate.class);
 
     Assert.assertEquals("new description", 
@@ -215,6 +202,16 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
   }
 
   @Test
+  public void testjson() throws Exception {
+    String body = loadContent(TPL_FILE);
+    System.out.println(body);
+    ExperimentTemplateSpec tplspec = 
+    gson.fromJson(body, ExperimentTemplateSpec.class);
+    System.out.println(tplspec);
+  }
+
+
+  @Test
   public void submitExperimentTemplate() throws Exception {
 
     String body = loadContent(TPL_FILE);
@@ -226,7 +223,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
     LOG.info(body);
 
     ExperimentTemplateSpec tplspec = 
-    gson.fromJson(body, ExperimentTemplate.class).getExperimentTemplateSpec();
+    gson.fromJson(body, ExperimentTemplateSpec.class);
 
     ExperimentTemplateSubmit submit = new ExperimentTemplateSubmit();
     submit.setName(tplspec.getName());
