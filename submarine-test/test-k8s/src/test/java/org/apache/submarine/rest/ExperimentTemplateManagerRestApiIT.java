@@ -81,7 +81,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
     deleteExperimentTemplate();
   }
 
-
+  /*
   @Test
   public void testUpdateExperimentTemplate() throws Exception {
     LOG.info("testUpdateExperimentTemplate");
@@ -113,7 +113,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
     deleteExperimentTemplate();
   }
-
+  */
   @Test
   public void testDeleteExperimentTemplate() throws Exception {
     LOG.info("testDeleteExperimentTemplate");
@@ -200,14 +200,17 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
   @Test
   public void submitExperimentTemplate() throws Exception {
+
     String body = loadContent(TPL_FILE);
-    String contentType = "application/json";
+    run(body, "application/json");
+
+
     String url = TPL_PATH + "/" + RestConstants.EXPERIMENT_TEMPLATE_SUBMIT;
     // submit
     LOG.info("Submit ExperimentTemplate using ExperimentTemplate REST API");
     LOG.info(body);
 
-    PostMethod postMethod = httpPost(url, body, contentType);
+    PostMethod postMethod = httpPost(url, body, "application/json");
     LOG.info(postMethod.getResponseBodyAsString());
     Assert.assertEquals(Response.Status.OK.getStatusCode(), 
         postMethod.getStatusCode());
@@ -226,5 +229,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
     LOG.info(experiment.toString());
 
     Assert.assertEquals(tpl.getExperimentTemplateSpec().getExperimentSpec(), experiment.getSpec());
+
+    deleteExperimentTemplate();
   }
 }
