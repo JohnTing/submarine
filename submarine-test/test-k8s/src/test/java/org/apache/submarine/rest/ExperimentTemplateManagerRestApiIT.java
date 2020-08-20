@@ -215,14 +215,6 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
   }
 
   @Test
-  public void test1() {
-
-    String s = "{\"experimentId\" : \"experiment_1597853926000_0025\"}";
-    Experiment experiment = gson.fromJson(s, Experiment.class);
-  }
-
-
-  @Test
   public void submitExperimentTemplate() throws Exception {
 
     String body = loadContent(TPL_FILE);
