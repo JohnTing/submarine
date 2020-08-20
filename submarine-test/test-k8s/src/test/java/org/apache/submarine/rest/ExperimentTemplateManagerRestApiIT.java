@@ -88,6 +88,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
     String body = loadContent(TPL_FILE);
     run(body, "application/json");
+    LOG.info(body);
 
     ExperimentTemplate tpl = gson.fromJson(body, ExperimentTemplate.class);
     tpl.getExperimentTemplateSpec().setDescription("new description");
@@ -151,7 +152,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
     deleteExperimentTemplate();
   }
-  
+
   protected void deleteExperimentTemplate() throws IOException {
 
     LOG.info("deleteExperimentTemplate");
