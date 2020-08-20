@@ -94,40 +94,6 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
     deleteExperimentTemplate();
   }
 
-  /*
-  @Test
-  public void testUpdateExperimentTemplate() throws Exception {
-    LOG.info("testUpdateExperimentTemplate");
-
-    String body = loadContent(TPL_FILE);
-    run(body, "application/json");
-    LOG.info(body);
-    
-    ExperimentTemplateSpec tplSpec = gson.fromJson(body, ExperimentTemplateSpec.class);
-    tplSpec.setDescription("new description");
-    String newBody = gson.toJson(tplSpec);
-
-    httpPatch(TPL_PATH + "/" + TPL_NAME, newBody, "application/json");
-
-    GetMethod getMethod = httpGet(TPL_PATH + "/" + TPL_NAME);
-    Assert.assertEquals(Response.Status.OK.getStatusCode(),
-        getMethod.getStatusCode());
-
-    String json = getMethod.getResponseBodyAsString();
-    JsonResponse jsonResponse = gson.fromJson(json, JsonResponse.class);
-    Assert.assertEquals(Response.Status.OK.getStatusCode(),
-        jsonResponse.getCode());
-            
-    ExperimentTemplate getExperimentTemplate =
-        gson.fromJson(gson.toJson(jsonResponse.getResult()), ExperimentTemplate.class);
-
-    Assert.assertEquals("new description", 
-        getExperimentTemplate.getExperimentTemplateSpec().getDescription());
-
-    deleteExperimentTemplate();
-  }
-  */
-  
   @Test
   public void testDeleteExperimentTemplate() throws Exception {
     LOG.info("testDeleteExperimentTemplate");
@@ -139,7 +105,6 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
     GetMethod getMethod = httpGet(TPL_PATH + "/" + TPL_NAME);
     Assert.assertEquals(Response.Status.NOT_FOUND.getStatusCode(),
         getMethod.getStatusCode());
-
   }
 
   @Test
@@ -188,9 +153,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
     // create
     LOG.info("Create ExperimentTemplate using ExperimentTemplate REST API");
-    LOG.info(body);
     PostMethod postMethod = httpPost(TPL_PATH, body, contentType);
-
     LOG.info(postMethod.getResponseBodyAsString());
 
     Assert.assertEquals(Response.Status.OK.getStatusCode(),
@@ -232,7 +195,7 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
     for (ExperimentTemplateParamSpec parmSpec: tplspec.getParameters()) {
       submit.getParams().put(parmSpec.getName(), parmSpec.getValue());
     }
-
+    
     PostMethod postMethod = httpPost(url, gson.toJson(submit), "application/json");
     LOG.info(postMethod.getResponseBodyAsString());
     Assert.assertEquals(Response.Status.OK.getStatusCode(), 
