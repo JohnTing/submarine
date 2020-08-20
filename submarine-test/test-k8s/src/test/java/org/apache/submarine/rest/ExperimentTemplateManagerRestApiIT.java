@@ -151,9 +151,8 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
     deleteExperimentTemplate();
   }
-
-  @Test
-  public void deleteExperimentTemplate() throws IOException {
+  
+  protected void deleteExperimentTemplate() throws IOException {
 
     LOG.info("deleteExperimentTemplate");
     DeleteMethod deleteMethod = httpDelete(TPL_PATH + "/" + TPL_NAME);
