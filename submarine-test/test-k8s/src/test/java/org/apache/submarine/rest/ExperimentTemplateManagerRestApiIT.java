@@ -53,8 +53,8 @@ public class ExperimentTemplateManagerRestApiIT extends AbstractSubmarineServerT
 
   protected static String TPL_PATH =
       "/api/" + RestConstants.V1 + "/" + RestConstants.EXPERIMENT_TEMPLATES;
-  protected static String TPL_NAME = "tf-mnist-test1";
-  protected static String TPL_FILE = "experimentTemplate/test_template_1.json";
+  protected static String TPL_NAME = "tf-mnist-test2";
+  protected static String TPL_FILE = "experimentTemplate/test_template_2.json";
   
   private final Gson gson = new GsonBuilder()
       .registerTypeAdapter(ExperimentId.class, new ExperimentIdSerializer())
