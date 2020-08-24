@@ -1,7 +1,7 @@
 {
-  "name": "tf-mnist-test1",
-  "author": "author",
-  "description": "This is a template to run tf-mnist\n",
+  "name": "tf-mnist-test_1",
+  "author": "test_author_1",
+  "description": "This is a test template to run tf-mnist\n",
   "parameters": [
     {
       "name": "training.learning_rate",
